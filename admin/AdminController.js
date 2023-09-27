@@ -14,43 +14,62 @@ router.get("/admin/users", (req, res) => {
 // register user
 router.get("/admin/users/create", (req, res) => {
     res.render('admin/users/create')
+    console.log('acessou rota criar usuario')
 })
 
 router.post("/users/create", (req, res) => {
     const email = req.body.email 
     const password = req.body.password
 
-    if(!email){
-        res.redirect('/admin/users/create') 
-    }
-    if(!password){
-        res.redirect('/admin/users/create') 
-    }
+    Admin.findOne({ where: { email: email}}).then( user => {
+        if(user == undefined){
 
-    Admin.findOne({ where: { email: email}}).then( admin => {
-        if(admin){
+            const salt = bcrypt.genSaltSync(10)
+            const hash = bcrypt.hashSync(password, salt)
+
+            Admin.create({
+                email: email, 
+                password : hash
+            }).then(() =>{
+                res.redirect('/admin/articles') 
+                console.log('criou usuario')
+            }).catch(err => {
+                res.redirect('/')
+            }) 
+        } else {
             res.redirect('/admin/users/create') 
         }
-        const salt = bcrypt.genSaltSync(10)
-        const hash = bcrypt.hashSync(password, salt)
-
-
-        Admin.create({
-            email: email, 
-            password : hash
-        }).then(() =>{
-            res.render('admin/users/listAdmin') 
-        }).catch((err) => {
-            res.redirect('/')
-        })
-
-
     })
-    
-    
-
-
-
 })
+router.get('/login', (req, res) => {
+    res.render("admin/users/login")
+})
+router.post('/authenticate', (req, res) => {
+    const email = req.body.email
+    const password = req.body.password
+
+    Admin.findOne({where:{email:email}}).then(user => {
+        if(user != undefined){
+            const corrent = bcrypt.compareSync(password, user.password)
+
+            if(corrent){
+                req.session.user = {
+                    id: user.id, 
+                    email: user.email
+                }
+                res.redirect('/admin/articles')
+            } else {
+                res.redirect('/')
+            }
+        } else {
+            res.redirect('/')
+        }
+    }) 
+})
+router.get("/logout", (req, res) => {
+    req.session.user = undefined;
+    res.redirect("/");
+})
+
 
 module.exports = router

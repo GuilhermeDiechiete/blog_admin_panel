@@ -17,9 +17,12 @@ connection.authenticate()
     .catch((error) => {console.log(error)})
 
 app.set('view engine', 'ejs')
+
+
+
 app.use(session({
     secret: "g00d0001999", 
-    cookie: {maxAge: 30000}
+    cookie: {maxAge: 30000000}
 }))
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: false}))
@@ -28,6 +31,9 @@ app.use(bodyParser.json())
 app.use('/', adminController)
 app.use('/', categoriesController)
 app.use('/', articlesController)
+
+
+
 
 app.get('/', (req, res) => {
 
@@ -50,12 +56,13 @@ app.get('/:slug', (req, res) => {
             slug: slug
         }
     }).then(article => {
-        if(!article){
+        if(article != undefined){
+            categoryModel.findAll().then(categories => {
+                res.render('article', {article: article, categories: categories}) 
+            })
+        } else {
             res.redirect('/')
-        }
-        categoryModel.findAll().then(categories => {
-            res.render('articles', {article: article, categories: categories}) 
-         })
+        }  
     }).catch( err => redirect('/'))
 })
 app.get('/category/:slug', (req, res) => {
