@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const connection = require('../db/conn')
+const connection = require('../database/conn')
 
 
 // relacionamento com...

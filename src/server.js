@@ -1,8 +1,9 @@
 const express = require('express')
 const app = express()
+
 const bodyParser = require('body-parser')
 const session = require('express-session')
-const connection = require('./db/conn')
+const connection = require('./database/conn')
 
 const categoriesController = require('./categories/CategoriesController')
 const articlesController = require('./articles/ArticlesController')

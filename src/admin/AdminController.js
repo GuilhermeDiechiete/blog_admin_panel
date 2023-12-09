@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
 
 const router = require('express').Router()
-const Admin = require('../admin/AdminModel')
+const Admin = require('./AdminModel')
 
 
 // list users
