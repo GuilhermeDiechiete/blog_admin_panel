@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const app = express()
 
@@ -8,16 +9,17 @@ const connection = require('./database/conn')
 const categoriesController = require('./categories/CategoriesController')
 const articlesController = require('./articles/ArticlesController')
 const adminController = require('./admin/AdminController')
-
+const path = require('path')
 const articleModel = require('./articles/ArticleModel')
 const categoryModel = require('./categories/CategoryModel')
-const adminModel = require('./admin/AdminModel')
+//const adminModel = require('./admin/AdminModel')
 
 connection.authenticate()
     .then(()=> console.log('Connect Database'))
     .catch((error) => {console.log(error)})
 
-app.set('view engine', 'ejs')
+    app.set('view engine', 'ejs');
+    app.set('views', path.join(__dirname, 'views'));
 
 
 
@@ -85,4 +87,4 @@ app.get('/category/:slug', (req, res) => {
     })
 })
 
-app.listen(3333, ()=> console.log('Servidor executando...'))
+app.listen(process.env.PORT, () => console.log('Servidor executando... ' + process.env.PORT))

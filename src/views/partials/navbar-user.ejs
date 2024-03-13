@@ -1,17 +1,26 @@
+<head>
+    <link rel="stylesheet" href="node_modules/bulma/css/bulma.min.css">
+</head>
+
 <nav class="navbar navbar-dark bg-primary">
 
     <a href="/" class="navbar-brand">Guia de Estudos</a>
 
     
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav ">
         <li class="nav-item">
             <a class="nav-link" href="/">Home</a>
         </li>
-        <% categories.forEach(category => { %>
+        
+        
+    </ul>
+    <ul class="navbar-nav ">
+      <% categories.forEach(category => { %>
             <li class="nav-item">
                 <a class="nav-link" href="/category/<%= category.slug %>"><%= category.title %></a>
             </li>
-        <% }) %>
+        <% }) %>  
+        
         
     </ul>
 
